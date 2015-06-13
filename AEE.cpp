@@ -178,7 +178,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	//for (int i = len1start + 1 ; i<= len1end ; i++) {
 	//	subDocED[i] = THRESHOLD + 1;
 	//}
-	for (int l1 = 1; l1 <= len1end; ++l1) {
+	for (l1 = 1; l1 <= len1end; ++l1) {
 		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
