@@ -333,7 +333,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					forwupp = min(subdocmax, entaillen + THRESHOLD);
 					//int forwbot = 1;
 					//int forwupp = doclen - currentPos;
-					dist = calcEDforw(document + currentPos, forwbot, forwupp,
+					calcEDforw(document + currentPos, forwbot, forwupp,
 								  entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen);
 					for (dl = forwbot; dl <= forwupp; ++dl) {
 						//
@@ -365,20 +365,20 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					backupp = min(subdocmax2, enheadlen + 1);
 					// backwards
 					backStartPosSize = 0;
-					dist = calcEDback(document + startpos - 1, backbot, backupp,
-						              entity[entityId].name.c_str() + entity[entityId].segpos[1], enheadlen);
+					calcEDback(document + startpos - 1, backbot, backupp,
+						              entity[entityId].name.c_str() + entity[entityId].segpos[1] - 1, enheadlen);
 					for (dl = backbot ; dl <= backupp ; ++dl) {
-						//dist = calcED(entity[entityId].name.c_str(), enheadlen,
+						//calcED(entity[entityId].name.c_str(), enheadlen,
 						//              document + startpos - dl, dl);
 						if (subDocED[dl] == 1)
 							backStartPos[backStartPosSize++] = startpos - dl;
 					}
 					// forwards
 					forwTailPosSize = 0;
-					dist = calcEDforw(document + currentPos, forwbot, forwupp,
+					calcEDforw(document + currentPos, forwbot, forwupp,
 						              entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen);
 					for (dl = forwbot ; dl <= forwupp ; ++dl) {
-						//dist = calcED(entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen,
+						//calcED(entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen,
 						//              document + currentPos, dl);
 						if (subDocED[dl] == 1)
 							forwTailPos[forwTailPosSize++] = currentPos + dl;
@@ -400,11 +400,11 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					//int backbot = 1;
 					//int backupp = startpos;
 					//cout << backbot << " " << backupp << endl;
-					dist = calcEDback(document + startpos - 1, backbot, backupp,
-								  entity[entityId].name.c_str() + entity[entityId].segpos[1], enheadlen);
+					calcEDback(document + startpos - 1, backbot, backupp,
+								  entity[entityId].name.c_str() + entity[entityId].segpos[1] - 1, enheadlen);
 					for (dl = backbot; dl <= backupp; ++dl) {
 						//cout << "right" << endl;
-						//dist = calcED(entity[entityId].name.c_str(), enheadlen,
+						//calcED(entity[entityId].name.c_str(), enheadlen,
 						//              document + startpos - dl, dl);
 						if (subDocED[dl] <= THRESHOLD && subDocED[dl] > 0) { // dist == 0 can be found in candidateleft
 					     	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
