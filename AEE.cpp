@@ -77,7 +77,7 @@ bool AEE::compareEDResult(const EDExtractResult &a, const EDExtractResult &b) {
 			(a.len < b.len);
 }
 
-int AEE::calcED(const char* doc1, int len1, int len2, const char* doc2, int len2) {
+int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* doc2, int len2) {
 	//if (abs(len1 - len2) > THRESHOLD)
 	//	return THRESHOLD + 1;
 	//if (len1 == 0)
@@ -110,7 +110,7 @@ int AEE::calcED(const char* doc1, int len1, int len2, const char* doc2, int len2
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
-	for (int l1 = 1; l1 <= len1; ++l1) {
+	for (int l1 = 1; l1 <= len1end; ++l1) {
 		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
@@ -118,6 +118,9 @@ int AEE::calcED(const char* doc1, int len1, int len2, const char* doc2, int len2
 			vn = editdist[i] +
 			     ((l2 >= 0 && l2 < len2) ? (doc1[l1-1] != doc2[l2]) : 1);
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
+		}
+		if (l1 >= len1start && l1 <= len1end) {
+			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 		for (int i = bot; i < top; ++i) {
 			if (editdist[bot] > THRESHOLD) bot++;
@@ -131,7 +134,53 @@ int AEE::calcED(const char* doc1, int len1, int len2, const char* doc2, int len2
 	}
 	// result
 	//cout << "dist:" << editdist[THRESHOLD + 1 + len2 - len1] << endl;
-	return editdist[THRESHOLD + 1 + len2 - len1];
+	//return editdist[THRESHOLD + 1 + len2 - len1];
+	return SUCCESS;
+}
+
+int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char* doc2end, int len2) {
+	bot = 1;
+	top = 2 * THRESHOLD + 2;
+	vl = 0;
+	vn = 0;
+	vt = 0;
+	l2 = 0;
+	//unsigned editdist[2 * THRESHOLD + 3];
+	editdist[0] = THRESHOLD + 1;
+	editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
+	for (int i = 1; i < THRESHOLD + 1; ++i) {
+		editdist[i] = THRESHOLD + 1 - i;
+	}
+	for (int i = THRESHOLD + 1; i < 2 * THRESHOLD + 2; ++i) {
+		editdist[i] = i - THRESHOLD - 1;
+	}
+	//update edit distance
+	for (int l1 = 1; l1 <= len1end; ++l1) {
+		for (int i = bot; i < top; ++i) {
+			vl = editdist[i-1]+1;
+			vt = editdist[i+1]+1;
+			l2 = i - THRESHOLD + l1 - 2;
+			vn = editdist[i] +
+			     ((l2 >= 0 && l2 < len2) ? (*(doc1end - (l1 - 1)) != *(doc2end - l2)) : 1);
+			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
+		}
+		if (l1 >= len1start && l1 <= len1end) {
+			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
+		}
+		for (int i = bot; i < top; ++i) {
+			if (editdist[bot] > THRESHOLD) bot++;
+			else break;
+		}
+		for (int i = top-1; i >= bot; --i) {
+			if (editdist[top - 1] > THRESHOLD) top--;
+			else break;
+		}
+		if (bot >= top) break;
+	}
+	// result
+	//cout << "dist:" << editdist[THRESHOLD + 1 + len2 - len1] << endl;
+	//return editdist[THRESHOLD + 1 + len2 - len1];
+	return SUCCESS;
 }
 
 int AEE::createIndex(const char *entity_file_name) {
@@ -282,13 +331,14 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					forwupp = min(subdocmax, entaillen + THRESHOLD);
 					//int forwbot = 1;
 					//int forwupp = doclen - currentPos;
+					dist = calcEDforw(document + currentPos, forwbot, forwupp,
+								  entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen);
 					for (dl = forwbot; dl <= forwupp; ++dl) {
-						dist = calcED(entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen,
-						              document + currentPos, dl);
-						if (dist <= THRESHOLD) {
-							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + (currentPos - startpos)), (unsigned)(dist)});
+						//
+						if (subDocED[dl] <= THRESHOLD) {
+							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
 							/*
-						ganj	EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + (currentPos - startpos)), (unsigned)(dist)};
+						    EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])};
 							cout << "------------------" << endl;
 							cout << er.id << " " << er.pos << " " << er.len << " " << er.sim << endl;
 							cout << entity[entityId].name << endl;
@@ -313,25 +363,27 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					backupp = min(subdocmax2, enheadlen + 1);
 					// backwards
 					backStartPosSize = 0;
+					//dist = calcED(entity[entityId].name.c_str(), enheadlen,
+					//              document + startpos - dl, dl);
 					for (dl = backbot ; dl <= backupp ; ++dl) {
-						dist = calcED(entity[entityId].name.c_str(), enheadlen,
-						              document + startpos - dl, dl);
-						if (dist == 1)
-							backStartPos[backStartPosSize++] = startpos - dl;
+						//dist = calcED(entity[entityId].name.c_str(), enheadlen,
+						//              document + startpos - dl, dl);
+						//if (dist == 1)
+						//	backStartPos[backStartPosSize++] = startpos - dl;
 					}
 					// forwards
 					forwTailPosSize = 0;
 					for (dl = forwbot ; dl <= forwupp ; ++dl) {
-						dist = calcED(entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen,
-						              document + currentPos, dl);
-						if (dist == 1)
-							forwTailPos[forwTailPosSize++] = currentPos + dl;
+						//dist = calcED(entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen,
+						//              document + currentPos, dl);
+						//if (dist == 1)
+						//	forwTailPos[forwTailPosSize++] = currentPos + dl;
 					}
 					// combine
 					for (int rbi = 0; rbi < backStartPosSize; ++rbi) {
-						for (int rfi = 0; rfi < forwTailPosSize; ++rfi)
-							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(backStartPos[rbi]),
-									                                  (unsigned)(forwTailPos[rfi] - backStartPos[rbi]), (unsigned)(2)});
+						//for (int rfi = 0; rfi < forwTailPosSize; ++rfi)
+						//	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(backStartPos[rbi]),
+						//			                                  (unsigned)(forwTailPos[rfi] - backStartPos[rbi]), (unsigned)(2)});
 					}
 				}
 			    //cout << endl;
@@ -346,10 +398,10 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					//cout << backbot << " " << backupp << endl;
 					for (dl = backbot; dl <= backupp; ++dl) {
 						//cout << "right" << endl;
-						dist = calcED(entity[entityId].name.c_str(), enheadlen,
-						              document + startpos - dl, dl);
-						if (dist <= THRESHOLD && dist > 0) { // dist == 0 can be found in candidateleft
-							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(dist)});
+						//dist = calcED(entity[entityId].name.c_str(), enheadlen,
+						//              document + startpos - dl, dl);
+						//if (dist <= THRESHOLD && dist > 0) { // dist == 0 can be found in candidateleft
+					    // 	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(dist)});
 							/*
 							EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(dist)};
 							cout << "------------------" << endl;
@@ -361,7 +413,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 							cout << endl;
 							cout << "------------------" << endl;
 							*/
-						}
+						//}
 					}
 				}
 			    //cout << endl;
@@ -369,6 +421,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     	}
     	//cout << "startpos: " << startpos << endl;
     }
+    /*
     sort(resultCandidate.begin(), resultCandidate.end(), compareEDResult);
     if (resultCandidate.size() > 0) {
     	result.push_back(resultCandidate[0]);
@@ -379,9 +432,13 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     } else {
     	return SUCCESS;
     }
-    //char* str1 = "ex";
-    //char* str2 = "ex ";
-    //cout << calcED(str1, 2, str2, 3) << endl;
+    */
+    char* str1 = "accdefg";
+    char* str2 = "abc";
+    calcEDback(str1 + 2, 1, 3, str2 + 2, 3);
+    for (int i = 1 ; i <= 5 ; i++) {
+    	cout << i << " " << subDocED[i] << endl;
+    }
     //cout << calcED(str1, 1, str2, 0) << endl;
     //cout << calcED(str1, 1, str2, 3) << endl;
     return SUCCESS;

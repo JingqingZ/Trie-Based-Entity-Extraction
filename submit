@@ -1,12 +1,10 @@
-make clean
 make
 rm *.zip
 zip AEE.zip AEE.cpp AEE.h
-cp main.cpp ../src/
-cp entity.txt ../src/
-sh ../src/submit
 
 echo '=========='
 ./aee entity.txt
 echo '=========='
-../src/aee ../src/entity.txt
+
+git commit -a -m "update"
+git push origin edupdate

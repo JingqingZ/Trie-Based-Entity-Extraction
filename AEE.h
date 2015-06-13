@@ -68,7 +68,8 @@ private:
 	int* charUniMap;
 	int charUniNum;
 	TrieNode* root;
-	int calcED(const char* doc1, int len1, const char* doc2, int len2);
+	int calcEDforw(const char* doc1, int len1start, int len1end, const char* doc2, int len2);
+	int calcEDback(const char* doc1end, int len1start, int len1end, const char* doc2end, int len2);
 	static bool compareEDResult(const EDExtractResult &a, const EDExtractResult &b);
 
 public:
