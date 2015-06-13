@@ -3,6 +3,6 @@ baiduxbaidubbaidub
 baidudbaiduxbaidux
 baidubaidubaidux
 baidubaiduxbaidux
-latex
+ablatex
 latex latex
 latex latex latex
