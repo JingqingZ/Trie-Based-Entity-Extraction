@@ -77,7 +77,7 @@ bool AEE::compareEDResult(const EDExtractResult &a, const EDExtractResult &b) {
 			(a.len < b.len);
 }
 
-int AEE::calcED(const char* doc1, int len1, const char* doc2, int len2) {
+int AEE::calcED(const char* doc1, int len1, int len2, const char* doc2, int len2) {
 	//if (abs(len1 - len2) > THRESHOLD)
 	//	return THRESHOLD + 1;
 	//if (len1 == 0)
