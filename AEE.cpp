@@ -140,6 +140,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 }
 
 int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char* doc2end, int len2) {
+	/*
 	for (int i = 0 ; i < len1start ; i++) {
 		cout << *(doc1end - i);
 	}
@@ -152,6 +153,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 		cout << *(doc2end - i);
 	}
 	cout << endl;
+	*/
 	bot = 1;
 	top = 2 * THRESHOLD + 2;
 	vl = 0;
@@ -323,8 +325,8 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     	//cout << "startpos:" << startpos << endl;
     	parent = root;
     	currentPos = startpos;
-    	while (false) {
-    	//while (currentPos < doclen) {
+    	//while (false) {
+    	while (currentPos < doclen) {
     		currentChar = charUniMap[(int)document[currentPos]];
     		//if (currentChar < 0)
     		//	break;
@@ -439,7 +441,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     	}
     	//cout << "startpos: " << startpos << endl;
     }
-    /*
+    
     sort(resultCandidate.begin(), resultCandidate.end(), compareEDResult);
     if (resultCandidate.size() > 0) {
     	result.push_back(resultCandidate[0]);
@@ -450,7 +452,8 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     } else {
     	return SUCCESS;
     }
-    */
+    
+    /*
     char* str1 = "dbcd hfg";
     char* str2 = "abcd efg";
     calcEDforw(str1, 0, 6, str2 + 1, 3);
@@ -461,7 +464,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     for (int i = 0 ; i <= 6 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
-    
+    */
     //cout << calcED(str1, 1, str2, 0) << endl;
     //cout << calcED(str1, 1, str2, 3) << endl;
     return SUCCESS;
