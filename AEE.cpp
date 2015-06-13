@@ -396,14 +396,16 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					//int backbot = 1;
 					//int backupp = startpos;
 					//cout << backbot << " " << backupp << endl;
+					dist = calcED(document + startpos - 1, backbot, backupp,
+								  entity[entityId].name.c_str(), enheadlen);
 					for (dl = backbot; dl <= backupp; ++dl) {
 						//cout << "right" << endl;
 						//dist = calcED(entity[entityId].name.c_str(), enheadlen,
 						//              document + startpos - dl, dl);
-						//if (dist <= THRESHOLD && dist > 0) { // dist == 0 can be found in candidateleft
-					    // 	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(dist)});
-							/*
-							EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(dist)};
+						if (subDocED[dl] <= THRESHOLD && subDocED[dl] > 0) { // dist == 0 can be found in candidateleft
+					     	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
+							
+							EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])};
 							cout << "------------------" << endl;
 							cout << er.id << " " << er.pos << " " << er.len << " " << er.sim << endl;
 							cout << entity[entityId].name << endl;
@@ -412,8 +414,8 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 							}
 							cout << endl;
 							cout << "------------------" << endl;
-							*/
-						//}
+							
+						}
 					}
 				}
 			    //cout << endl;
@@ -421,7 +423,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     	}
     	//cout << "startpos: " << startpos << endl;
     }
-    /*
+    
     sort(resultCandidate.begin(), resultCandidate.end(), compareEDResult);
     if (resultCandidate.size() > 0) {
     	result.push_back(resultCandidate[0]);
@@ -432,13 +434,14 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     } else {
     	return SUCCESS;
     }
-    */
+    /*
     char* str1 = "aaccdefg";
     char* str2 = "abc";
     calcEDback(str1 + 4, 1, 5, str2 + 2, 3);
     for (int i = 1 ; i <= 5 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
+    */
     //cout << calcED(str1, 1, str2, 0) << endl;
     //cout << calcED(str1, 1, str2, 3) << endl;
     return SUCCESS;
