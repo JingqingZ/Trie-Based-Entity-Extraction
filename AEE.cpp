@@ -396,9 +396,9 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					}
 					// forwards
 					forwTailPosSize = 0;
-					calcEDforw(document + currentPos, forwbot, forwupp,
+					returnupp = calcEDforw(document + currentPos, forwbot, forwupp,
 						              entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen);
-					for (dl = forwbot ; dl <= forwupp ; ++dl) {
+					for (dl = forwbot ; dl < returnupp ; ++dl) {
 						//calcED(entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen,
 						//              document + currentPos, dl);
 						if (subDocED[dl] == 1)
