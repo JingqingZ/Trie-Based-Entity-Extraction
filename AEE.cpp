@@ -363,27 +363,29 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					backupp = min(subdocmax2, enheadlen + 1);
 					// backwards
 					backStartPosSize = 0;
-					//dist = calcED(entity[entityId].name.c_str(), enheadlen,
-					//              document + startpos - dl, dl);
+					dist = calcEDback(document + startpos - 1, backbot, backupp,
+						              entity[entityId].name.c_str(), enheadlen);
 					for (dl = backbot ; dl <= backupp ; ++dl) {
 						//dist = calcED(entity[entityId].name.c_str(), enheadlen,
 						//              document + startpos - dl, dl);
-						//if (dist == 1)
-						//	backStartPos[backStartPosSize++] = startpos - dl;
+						if (subDocED[dl] == 1)
+							backStartPos[backStartPosSize++] = startpos - dl;
 					}
 					// forwards
 					forwTailPosSize = 0;
+					dist = calcEDforw(document + currentPos, forwbot, forwupp,
+						              entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen);
 					for (dl = forwbot ; dl <= forwupp ; ++dl) {
 						//dist = calcED(entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen,
 						//              document + currentPos, dl);
-						//if (dist == 1)
-						//	forwTailPos[forwTailPosSize++] = currentPos + dl;
+						if (subDocED[dl] == 1)
+							forwTailPos[forwTailPosSize++] = currentPos + dl;
 					}
 					// combine
 					for (int rbi = 0; rbi < backStartPosSize; ++rbi) {
-						//for (int rfi = 0; rfi < forwTailPosSize; ++rfi)
-						//	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(backStartPos[rbi]),
-						//			                                  (unsigned)(forwTailPos[rfi] - backStartPos[rbi]), (unsigned)(2)});
+						for (int rfi = 0; rfi < forwTailPosSize; ++rfi)
+							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(backStartPos[rbi]),
+									                                  (unsigned)(forwTailPos[rfi] - backStartPos[rbi]), (unsigned)(2)});
 					}
 				}
 			    //cout << endl;
@@ -404,7 +406,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 						//              document + startpos - dl, dl);
 						if (subDocED[dl] <= THRESHOLD && subDocED[dl] > 0) { // dist == 0 can be found in candidateleft
 					     	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
-							
+							/*
 							EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])};
 							cout << "------------------" << endl;
 							cout << er.id << " " << er.pos << " " << er.len << " " << er.sim << endl;
@@ -414,7 +416,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 							}
 							cout << endl;
 							cout << "------------------" << endl;
-							
+							*/
 						}
 					}
 				}
