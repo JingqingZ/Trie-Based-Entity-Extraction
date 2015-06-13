@@ -140,6 +140,18 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 }
 
 int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char* doc2end, int len2) {
+	for (int i = 0 ; i < len1start ; i++) {
+		cout << *(doc1end - i);
+	}
+	cout << endl;
+	for (int i = 0 ; i < len1end ; i++) {
+		cout << *(doc1end - i);
+	}
+	cout << endl;
+	for (int i = 0 ; i < len2 ; i++) {
+		cout << *(doc2end - i);
+	}
+	cout << endl;
 	bot = 1;
 	top = 2 * THRESHOLD + 2;
 	vl = 0;
@@ -163,7 +175,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			vt = editdist[i+1]+1;
 			l2 = i - THRESHOLD + l1 - 2;
 			vn = editdist[i] +
-			     ((l2 >= 0 && l2 < len2) ? (*(doc1end - (l1 - 1)) != *(doc2end - l2 - 1)) : 1);
+			     ((l2 >= 0 && l2 < len2) ? (*(doc1end - (l1 - 1)) != *(doc2end - l2)) : 1);
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 		}
 		if (l1 >= len1start && l1 <= len1end) {
@@ -311,8 +323,8 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     	//cout << "startpos:" << startpos << endl;
     	parent = root;
     	currentPos = startpos;
-    	//while (false) {
-    	while (currentPos < doclen) {
+    	while (false) {
+    	//while (currentPos < doclen) {
     		currentChar = charUniMap[(int)document[currentPos]];
     		//if (currentChar < 0)
     		//	break;
