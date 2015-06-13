@@ -439,7 +439,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     	}
     	//cout << "startpos: " << startpos << endl;
     }
-    
+    /*
     sort(resultCandidate.begin(), resultCandidate.end(), compareEDResult);
     if (resultCandidate.size() > 0) {
     	result.push_back(resultCandidate[0]);
@@ -450,7 +450,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     } else {
     	return SUCCESS;
     }
-    
+    */
     char* str1 = "dbcd hfg";
     char* str2 = "abcd efg";
     calcEDforw(str1, 0, 6, str2 + 1, 3);
