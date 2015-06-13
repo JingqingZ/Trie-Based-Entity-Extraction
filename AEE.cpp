@@ -441,12 +441,12 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     
     char* str1 = "abcdefg";
     char* str2 = "abcdefg";
-    calcEDforw(str1, 0, 5, str2, 3);
-    for (int i = 0 ; i <= 5 ; i++) {
+    calcEDforw(str1, 0, 4, str2, 2);
+    for (int i = 0 ; i <= 4 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
-    calcEDback(str1 + 7, 0, 5, str2 + 7, 3);
-    for (int i = 0 ; i <= 5 ; i++) {
+    calcEDback(str1 + 7, 0, 4, str2 + 7, 2);
+    for (int i = 0 ; i <= 4 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
     
