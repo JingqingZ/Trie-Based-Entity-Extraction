@@ -167,6 +167,9 @@ int AEE::createIndex(const char *entity_file_name) {
 		currentEntity.name = line;
 		currentEntity.length = strlen(line);
 
+		if (currentEntity.length > 39)
+			continue;
+
 		// cut \n
 		if (currentEntity.name[currentEntity.length - 1] == '\n') {
 			currentEntity.name[currentEntity.length - 1] = '\0';
