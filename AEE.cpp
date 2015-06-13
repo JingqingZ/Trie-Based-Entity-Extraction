@@ -438,18 +438,18 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     } else {
     	return SUCCESS;
     }
-    /*
-    char* str1 = "dbcdefg";
-    char* str2 = "abcdefg";
-    calcEDforw(str1, 0, 4, str2, 2);
-    for (int i = 0 ; i <= 4 ; i++) {
+    
+    char* str1 = "dbcd hfg";
+    char* str2 = "abcd efg";
+    calcEDforw(str1, 0, 6, str2 + 1, 3);
+    for (int i = 0 ; i <= 6 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
-    calcEDback(str1 + 7, 0, 4, str2 + 7, 2);
-    for (int i = 0 ; i <= 4 ; i++) {
+    calcEDback(str1 + 8, 0, 6, str2 + 7, 3);
+    for (int i = 0 ; i <= 6 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
-    */
+    
     //cout << calcED(str1, 1, str2, 0) << endl;
     //cout << calcED(str1, 1, str2, 3) << endl;
     return SUCCESS;
