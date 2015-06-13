@@ -110,6 +110,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
+	subDocED[len1start] = len2;
 	for (int l1 = 1; l1 <= len1end; ++l1) {
 		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
@@ -155,6 +156,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
+	subDocED[len1start] = len2;
 	for (int l1 = 1; l1 <= len1end; ++l1) {
 		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
@@ -364,7 +366,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					// backwards
 					backStartPosSize = 0;
 					dist = calcEDback(document + startpos - 1, backbot, backupp,
-						              entity[entityId].name.c_str(), enheadlen);
+						              entity[entityId].name.c_str() + entity[entityId].segpos[1], enheadlen);
 					for (dl = backbot ; dl <= backupp ; ++dl) {
 						//dist = calcED(entity[entityId].name.c_str(), enheadlen,
 						//              document + startpos - dl, dl);
@@ -399,7 +401,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					//int backupp = startpos;
 					//cout << backbot << " " << backupp << endl;
 					dist = calcEDback(document + startpos - 1, backbot, backupp,
-								  entity[entityId].name.c_str(), enheadlen);
+								  entity[entityId].name.c_str() + entity[entityId].segpos[1], enheadlen);
 					for (dl = backbot; dl <= backupp; ++dl) {
 						//cout << "right" << endl;
 						//dist = calcED(entity[entityId].name.c_str(), enheadlen,
@@ -436,14 +438,18 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     } else {
     	return SUCCESS;
     }
-    /*
-    char* str1 = "aaccdefg";
-    char* str2 = "abc";
-    calcEDback(str1 + 4, 1, 5, str2 + 2, 3);
-    for (int i = 1 ; i <= 5 ; i++) {
+    
+    char* str1 = "abcdefg";
+    char* str2 = "abcdefg";
+    calcEDforw(str1, 0, 5, str2 + 2, 3);
+    for (int i = 0 ; i <= 5 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
-    */
+    calcEDback(str1 + 7, 0, 5, str2 + 7, 3);
+    for (int i = 0 ; i <= 5 ; i++) {
+    	cout << i << " " << subDocED[i] << endl;
+    }
+    
     //cout << calcED(str1, 1, str2, 0) << endl;
     //cout << calcED(str1, 1, str2, 3) << endl;
     return SUCCESS;
