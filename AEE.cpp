@@ -438,7 +438,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     } else {
     	return SUCCESS;
     }
-    
+    /*
     char* str1 = "abcdefg";
     char* str2 = "abcdefg";
     calcEDforw(str1, 0, 4, str2, 2);
@@ -449,7 +449,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     for (int i = 0 ; i <= 4 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
-    
+    */
     //cout << calcED(str1, 1, str2, 0) << endl;
     //cout << calcED(str1, 1, str2, 3) << endl;
     return SUCCESS;
