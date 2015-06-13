@@ -19,6 +19,7 @@ int top = 2 * THRESHOLD + 2;
 int vl = 0;
 int vn = 0;
 int vt = 0;
+int l1 = 0;
 int l2 = 0;
 unsigned editdist[2 * THRESHOLD + 3];
 
@@ -26,7 +27,7 @@ unsigned editdist[2 * THRESHOLD + 3];
 int currentChar;
 int currentPos;
 int entityId;
-int dist;
+int returnupp;
 int enheadlen;
 int entaillen;
 int forwbot;
@@ -111,10 +112,10 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	}
 	//update edit distance
 	subDocED[len1start] = len2;
-	for (int i = len1start + 1 ; i<= len1end ; i++) {
-		subDocED[i] = THRESHOLD + 1;
-	}
-	for (int l1 = 1; l1 <= len1end; ++l1) {
+	//for (int i = len1start + 1 ; i<= len1end ; i++) {
+	//	subDocED[i] = THRESHOLD + 1;
+	//}
+	for (l1 = 1; l1 <= len1end; ++l1) {
 		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
@@ -122,9 +123,6 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			vn = editdist[i] +
 			     ((l2 >= 0 && l2 < len2) ? (doc1[l1-1] != doc2[l2]) : 1);
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
-		}
-		if (l1 >= len1start && l1 <= len1end) {
-			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 		for (int i = bot; i < top; ++i) {
 			if (editdist[bot] > THRESHOLD) bot++;
@@ -135,11 +133,14 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			else break;
 		}
 		if (bot >= top) break;
+		if (l1 >= len1start && l1 <= len1end) {
+			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
+		}
 	}
 	// result
 	//cout << "dist:" << editdist[THRESHOLD + 1 + len2 - len1] << endl;
 	//return editdist[THRESHOLD + 1 + len2 - len1];
-	return SUCCESS;
+	return l1;
 }
 
 int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char* doc2end, int len2) {
@@ -353,9 +354,9 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					forwupp = min(subdocmax, entaillen + THRESHOLD);
 					//int forwbot = 1;
 					//int forwupp = doclen - currentPos;
-					calcEDforw(document + currentPos, forwbot, forwupp,
-								  entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen);
-					for (dl = forwbot; dl <= forwupp; ++dl) {
+					returnupp = calcEDforw(document + currentPos, forwbot, forwupp,
+								           entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen);
+					for (dl = forwbot; dl < returnupp; ++dl) {
 						//
 						if (subDocED[dl] <= THRESHOLD) {
 							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
