@@ -428,7 +428,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 						//              document + startpos - dl, dl);
 						if (subDocED[dl] <= THRESHOLD && subDocED[dl] > 0) { // dist == 0 can be found in candidateleft
 					     	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
-							
+							/*
 							EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])};
 							cout << "------------------" << endl;
 							cout << er.id << " " << er.pos << " " << er.len << " " << er.sim << endl;
@@ -438,7 +438,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 							}
 							cout << endl;
 							cout << "------------------" << endl;
-							
+							*/
 						}
 					}
 				}
