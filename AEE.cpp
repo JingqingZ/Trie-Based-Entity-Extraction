@@ -97,10 +97,10 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	*/
 	bot = 1;
 	top = 2 * THRESHOLD + 2;
-	vl = 0;
-	vn = 0;
-	vt = 0;
-	l2 = 0;
+	//vl = 0;
+	//vn = 0;
+	//vt = 0;
+	//l2 = 0;
 	//unsigned editdist[2 * THRESHOLD + 3];
 	editdist[0] = THRESHOLD + 1;
 	editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
@@ -160,10 +160,10 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	*/
 	bot = 1;
 	top = 2 * THRESHOLD + 2;
-	vl = 0;
-	vn = 0;
-	vt = 0;
-	l2 = 0;
+	//vl = 0;
+	//vn = 0;
+	//vt = 0;
+	//l2 = 0;
 	//unsigned editdist[2 * THRESHOLD + 3];
 	editdist[0] = THRESHOLD + 1;
 	editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
