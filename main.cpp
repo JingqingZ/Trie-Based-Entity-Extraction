@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 
     aee.createIndex(argv[1]);
     //aee.aeeJaccard(argv[2], jaccardThreshold, resultJaccard);
-    char* test = "baiduxbaiduxbaiduj";
+    char* test = "latex latex latex";
     cout << test << endl;
     aee.aeeED(test, edThreshold, resultED);
     
