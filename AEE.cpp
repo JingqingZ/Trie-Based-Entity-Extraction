@@ -322,7 +322,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     
     const int endpos = (doclen - segMinLen + 1);
     for (int startpos = 0 ; startpos < endpos; startpos++) {
-    	//cout << "startpos:" << startpos << endl;
+    	cout << "startpos:" << startpos << endl;
     	parent = root;
     	currentPos = startpos;
     	//while (false) {
@@ -413,7 +413,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					backupp = min(subdocmax2, enheadlen + THRESHOLD);
 					//int backbot = 1;
 					//int backupp = startpos;
-					//cout << backbot << " " << backupp << endl;
+					cout << backbot << " " << backupp << endl;
 					calcEDback(document + startpos - 1, backbot, backupp,
 								  entity[entityId].name.c_str() + entity[entityId].segpos[2] - 1, enheadlen);
 					for (dl = backbot; dl <= backupp; ++dl) {
