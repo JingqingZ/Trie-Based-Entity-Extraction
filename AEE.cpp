@@ -457,7 +457,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     for (int i = 0 ; i <= 6 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
-    calcEDback(str1 + 8, 0, 6, str2 + 7, 3);
+    calcEDback(str1 + 7, 0, 6, str2 + 6, 3);
     for (int i = 0 ; i <= 6 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
