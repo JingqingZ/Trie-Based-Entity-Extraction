@@ -79,29 +79,10 @@ bool AEE::compareEDResult(const EDExtractResult &a, const EDExtractResult &b) {
 }
 
 int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* doc2, int len2) {
-	//if (abs(len1 - len2) > THRESHOLD)
-	//	return THRESHOLD + 1;
-	//if (len1 == 0)
-	//	return len2;
-	//if (len2 == 0)
-	//	return len1;
-	/*
-	cout << len1 << endl;
-	for (int i = 0 ; i < len1 ; i++)
-		cout << doc1[i];
-	cout << endl;
-	cout << len2 << endl;
-	for (int i = 0; i < len2; ++i)
-		cout << doc2[i];
-	cout << endl;
-	*/
+	// calculate ED forwards
+	// initialize
 	bot = 1;
 	top = 2 * THRESHOLD + 2;
-	//vl = 0;
-	//vn = 0;
-	//vt = 0;
-	//l2 = 0;
-	//unsigned editdist[2 * THRESHOLD + 3];
 	editdist[0] = THRESHOLD + 1;
 	editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
 	for (int i = 1; i < THRESHOLD + 1; ++i) {
@@ -112,9 +93,6 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	}
 	//update edit distance
 	subDocED[len1start] = len2;
-	//for (int i = len1start + 1 ; i<= len1end ; i++) {
-	//	subDocED[i] = THRESHOLD + 1;
-	//}
 	for (l1 = 1; l1 <= len1end; ++l1) {
 		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
@@ -137,34 +115,13 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 	}
-	// result
-	//cout << "dist:" << editdist[THRESHOLD + 1 + len2 - len1] << endl;
-	//return editdist[THRESHOLD + 1 + len2 - len1];
 	return l1;
 }
 
 int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char* doc2end, int len2) {
-	/*
-	for (int i = 0 ; i < len1start ; i++) {
-		cout << *(doc1end - i);
-	}
-	cout << endl;
-	for (int i = 0 ; i < len1end ; i++) {
-		cout << *(doc1end - i);
-	}
-	cout << endl;
-	for (int i = 0 ; i < len2 ; i++) {
-		cout << *(doc2end - i);
-	}
-	cout << endl;
-	*/
+	//calculate ED backwards
 	bot = 1;
 	top = 2 * THRESHOLD + 2;
-	//vl = 0;
-	//vn = 0;
-	//vt = 0;
-	//l2 = 0;
-	//unsigned editdist[2 * THRESHOLD + 3];
 	editdist[0] = THRESHOLD + 1;
 	editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
 	for (int i = 1; i < THRESHOLD + 1; ++i) {
@@ -175,9 +132,6 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	}
 	//update edit distance
 	subDocED[len1start] = len2;
-	//for (int i = len1start + 1 ; i<= len1end ; i++) {
-	//	subDocED[i] = THRESHOLD + 1;
-	//}
 	for (l1 = 1; l1 <= len1end; ++l1) {
 		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
@@ -200,9 +154,6 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 	}
-	// result
-	//cout << "dist:" << editdist[THRESHOLD + 1 + len2 - len1] << endl;
-	//return editdist[THRESHOLD + 1 + len2 - len1];
 	return l1;
 }
 
@@ -234,6 +185,7 @@ int AEE::createIndex(const char *entity_file_name) {
 		else if (currentEntity.length > entityMaxLen)
 			entityMaxLen = currentEntity.length;
 
+		// each segment
 		int mode = currentEntity.length % segmentNum;
 		int seglen = currentEntity.length / segmentNum;
 		if (seglen < segMinLen)
@@ -246,14 +198,12 @@ int AEE::createIndex(const char *entity_file_name) {
 		}
 		currentEntity.segpos[3] = currentEntity.length;
 
-		//for (int i = 0; i < 4; ++i) {
-		//	cout << currentEntity.segpos[i] << " ";
-		//}
-		//cout << endl;
 		entity[id] = currentEntity;
 		id ++;
 	}
 	entityNum = id;
+
+	// update substring length duration
 	subDocMinLen = entityMinLen - THRESHOLD;
 	subDocMaxLen = entityMaxLen + THRESHOLD;
 	
@@ -271,7 +221,6 @@ int AEE::createIndex(const char *entity_file_name) {
 		int mode = entity[ei].length % segmentNum;
 		int startpos = 0;
 		int enlen = entity[ei].length / segmentNum;
-		//cout << "-----\n" << entity[ei].name << endl;
 		for (int i = 0; i < segmentNum; ++i) {
 			if (i == segmentNum - mode)
 				enlen ++;
@@ -279,14 +228,12 @@ int AEE::createIndex(const char *entity_file_name) {
 			for (int p = 0; p < enlen; p++) {
 				int cp = startpos + p;
 				int cc = charUniMap[(int)(entity[ei].name[cp])];
-				//cout << entity[ei].name[cp] << " " << cc << " ";
 				if (parent->children[cc] == NULL) {
 					TrieNode* child = new TrieNode(charUniNum);
 					parent->children[cc] = child;
 				}
 				parent = parent->children[cc];
 			}
-			//cout << endl;
 			parent->leaf = true;
 			if (i == 0)
 				parent->entityCandidateLeft.push_back(ei);
@@ -294,22 +241,8 @@ int AEE::createIndex(const char *entity_file_name) {
 				parent->entityCandidateRight.push_back(ei);
 			else
 				parent->entityCandidateMiddle.push_back(ei);
-			/*
-			for (int pi = 0 ; pi < parent->entityCandidateLeft.size() ; pi++)
-				cout << parent->entityCandidateLeft[pi] << " ";
-		    cout << endl;
-			for (int pi = 0 ; pi < parent->entityCandidateMiddle.size() ; pi++)
-				cout << parent->entityCandidateMiddle[pi] << " ";
-		    cout << endl;
-		    for (int pi = 0 ; pi < parent->entityCandidateRight.size() ; pi++)
-				cout << parent->entityCandidateRight[pi] << " ";
-		    cout << endl;
-		    */
 			startpos += enlen;
 		}
-		//if (startpos != entity[ei].length) {
-		//	cout << "Error! startpos != entity[ei].length" << endl;
-		//}
 	}
 
     return SUCCESS;
@@ -329,14 +262,10 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     
     const int endpos = (doclen - segMinLen + 1);
     for (int startpos = 0 ; startpos < endpos; startpos++) {
-    	//cout << "startpos:" << startpos << endl;
     	parent = root;
     	currentPos = startpos;
-    	//while (false) {
     	while (currentPos < doclen) {
     		currentChar = charUniMap[(int)document[currentPos]];
-    		//if (currentChar < 0)
-    		//	break;
     		parent = parent->children[currentChar];
     		currentPos ++;
     		if (parent == NULL)
@@ -347,36 +276,19 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     			subdocmax = min(doclen - currentPos, subDocMaxLen - subduration);
     			subdocmax2 = min(startpos, subDocMaxLen - subduration);
     			for (pi = 0 ; pi < parent->entityCandidateLeft.size() ; pi++) {
-					//cout << parent->entityCandidateLeft[pi] << " ";
 					entityId = parent->entityCandidateLeft[pi];
 					entaillen = entity[entityId].segpos[3] - entity[entityId].segpos[1];
 					forwbot = max(subdocmin, entaillen - THRESHOLD);
 					forwupp = min(subdocmax, entaillen + THRESHOLD);
-					//int forwbot = 1;
-					//int forwupp = doclen - currentPos;
 					returnupp = calcEDforw(document + currentPos, forwbot, forwupp,
 								           entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen);
 					for (dl = forwbot; dl < returnupp; ++dl) {
-						//
 						if (subDocED[dl] <= THRESHOLD) {
 							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
-							/*
-						    EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])};
-							cout << "------------------" << endl;
-							cout << er.id << " " << er.pos << " " << er.len << " " << er.sim << endl;
-							cout << entity[entityId].name << endl;
-							for (int ci = 0 ; ci < er.len ; ci++) {
-								cout << document[er.pos + ci];
-							}
-							cout << endl;
-							cout << "------------------" << endl;
-							*/
 						}
 					}
 				}
-			    //cout << endl;
 				for (pi = 0 ; pi < parent->entityCandidateMiddle.size() ; pi++) {
-					//cout << parent->entityCandidateMiddle[pi] << " ";
 					entityId = parent->entityCandidateMiddle[pi];
 					enheadlen = entity[entityId].segpos[1];
 					entaillen = entity[entityId].segpos[3] - entity[entityId].segpos[2];
@@ -389,8 +301,6 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					returnupp = calcEDback(document + startpos - 1, backbot, backupp,
 						              entity[entityId].name.c_str() + entity[entityId].segpos[1] - 1, enheadlen);
 					for (dl = backbot ; dl < returnupp ; ++dl) {
-						//calcED(entity[entityId].name.c_str(), enheadlen,
-						//              document + startpos - dl, dl);
 						if (subDocED[dl] == 1)
 							backStartPos[backStartPosSize++] = startpos - dl;
 					}
@@ -399,8 +309,6 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					returnupp = calcEDforw(document + currentPos, forwbot, forwupp,
 						              entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen);
 					for (dl = forwbot ; dl < returnupp ; ++dl) {
-						//calcED(entity[entityId].name.c_str() + entity[entityId].segpos[2], entaillen,
-						//              document + currentPos, dl);
 						if (subDocED[dl] == 1)
 							forwTailPos[forwTailPosSize++] = currentPos + dl;
 					}
@@ -411,44 +319,24 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 									                                  (unsigned)(forwTailPos[rfi] - backStartPos[rbi]), (unsigned)(2)});
 					}
 				}
-			    //cout << endl;
 			    for (pi = 0 ; pi < parent->entityCandidateRight.size() ; pi++) {
-					//cout << parent->entityCandidateLeft[pi] << " ";
 					entityId = parent->entityCandidateRight[pi];
 					enheadlen = entity[entityId].segpos[2];
 					backbot = max(subdocmin, enheadlen - THRESHOLD);
 					backupp = min(subdocmax2, enheadlen + THRESHOLD);
-					//int backbot = 1;
-					//int backupp = startpos;
-					//cout << backbot << " " << backupp << endl;
 					returnupp = calcEDback(document + startpos - 1, backbot, backupp,
 								  entity[entityId].name.c_str() + entity[entityId].segpos[2] - 1, enheadlen);
 					for (dl = backbot; dl < returnupp; ++dl) {
-						//cout << "right" << endl;
-						//calcED(entity[entityId].name.c_str(), enheadlen,
-						//              document + startpos - dl, dl);
 						if (subDocED[dl] <= THRESHOLD && subDocED[dl] > 0) { // dist == 0 can be found in candidateleft
 					     	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
-							/*
-							EDExtractResult er = {(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])};
-							cout << "------------------" << endl;
-							cout << er.id << " " << er.pos << " " << er.len << " " << er.sim << endl;
-							cout << entity[entityId].name << endl;
-							for (int ci = 0 ; ci < er.len ; ci++) {
-								cout << document[er.pos + ci];
-							}
-							cout << endl;
-							cout << "------------------" << endl;
-							*/
 						}
 					}
 				}
-			    //cout << endl;
     		}
     	}
-    	//cout << "startpos: " << startpos << endl;
     }
-    
+	
+	// sort and unique    
     sort(resultCandidate.begin(), resultCandidate.end(), compareEDResult);
     if (resultCandidate.size() > 0) {
     	result.push_back(resultCandidate[0]);
@@ -460,19 +348,5 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     	return SUCCESS;
     }
     
-    /*
-    char* str1 = "dbcd hfg";
-    char* str2 = "abcd efg";
-    calcEDforw(str1, 0, 6, str2 + 1, 3);
-    for (int i = 0 ; i <= 6 ; i++) {
-    	cout << i << " " << subDocED[i] << endl;
-    }
-    calcEDback(str1 + 7, 0, 6, str2 + 6, 3);
-    for (int i = 0 ; i <= 6 ; i++) {
-    	cout << i << " " << subDocED[i] << endl;
-    }
-    */
-    //cout << calcED(str1, 1, str2, 0) << endl;
-    //cout << calcED(str1, 1, str2, 3) << endl;
     return SUCCESS;
 }
