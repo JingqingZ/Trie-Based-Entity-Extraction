@@ -401,7 +401,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					//int backupp = startpos;
 					//cout << backbot << " " << backupp << endl;
 					calcEDback(document + startpos - 1, backbot, backupp,
-								  entity[entityId].name.c_str() + entity[entityId].segpos[1] - 1, enheadlen);
+								  entity[entityId].name.c_str() + entity[entityId].segpos[2] - 1, enheadlen);
 					for (dl = backbot; dl <= backupp; ++dl) {
 						//cout << "right" << endl;
 						//calcED(entity[entityId].name.c_str(), enheadlen,
