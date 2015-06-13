@@ -441,7 +441,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     
     char* str1 = "abcdefg";
     char* str2 = "abcdefg";
-    calcEDforw(str1, 0, 5, str2 + 2, 3);
+    calcEDforw(str1, 0, 5, str2, 3);
     for (int i = 0 ; i <= 5 ; i++) {
     	cout << i << " " << subDocED[i] << endl;
     }
