@@ -175,9 +175,9 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	}
 	//update edit distance
 	subDocED[len1start] = len2;
-	for (int i = len1start + 1 ; i<= len1end ; i++) {
-		subDocED[i] = THRESHOLD + 1;
-	}
+	//for (int i = len1start + 1 ; i<= len1end ; i++) {
+	//	subDocED[i] = THRESHOLD + 1;
+	//}
 	for (int l1 = 1; l1 <= len1end; ++l1) {
 		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
@@ -186,9 +186,6 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			vn = editdist[i] +
 			     ((l2 >= 0 && l2 < len2) ? (*(doc1end - (l1 - 1)) != *(doc2end - l2)) : 1);
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
-		}
-		if (l1 >= len1start && l1 <= len1end) {
-			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 		for (int i = bot; i < top; ++i) {
 			if (editdist[bot] > THRESHOLD) bot++;
@@ -199,11 +196,14 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			else break;
 		}
 		if (bot >= top) break;
+		if (l1 >= len1start && l1 <= len1end) {
+			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
+		}
 	}
 	// result
 	//cout << "dist:" << editdist[THRESHOLD + 1 + len2 - len1] << endl;
 	//return editdist[THRESHOLD + 1 + len2 - len1];
-	return SUCCESS;
+	return l1;
 }
 
 int AEE::createIndex(const char *entity_file_name) {
@@ -386,9 +386,9 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					backupp = min(subdocmax2, enheadlen + 1);
 					// backwards
 					backStartPosSize = 0;
-					calcEDback(document + startpos - 1, backbot, backupp,
+					returnupp = calcEDback(document + startpos - 1, backbot, backupp,
 						              entity[entityId].name.c_str() + entity[entityId].segpos[1] - 1, enheadlen);
-					for (dl = backbot ; dl <= backupp ; ++dl) {
+					for (dl = backbot ; dl < returnupp ; ++dl) {
 						//calcED(entity[entityId].name.c_str(), enheadlen,
 						//              document + startpos - dl, dl);
 						if (subDocED[dl] == 1)
@@ -421,9 +421,9 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					//int backbot = 1;
 					//int backupp = startpos;
 					//cout << backbot << " " << backupp << endl;
-					calcEDback(document + startpos - 1, backbot, backupp,
+					returnupp = calcEDback(document + startpos - 1, backbot, backupp,
 								  entity[entityId].name.c_str() + entity[entityId].segpos[2] - 1, enheadlen);
-					for (dl = backbot; dl <= backupp; ++dl) {
+					for (dl = backbot; dl < returnupp; ++dl) {
 						//cout << "right" << endl;
 						//calcED(entity[entityId].name.c_str(), enheadlen,
 						//              document + startpos - dl, dl);
