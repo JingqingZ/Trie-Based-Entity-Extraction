@@ -113,7 +113,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
-		if (bot >= top) return l1;
+		if (bot > top) return l1;
 		//if (l1 >= len1start) {
 		//	subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		//}
@@ -135,7 +135,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
-		if (bot >= top) return l1;
+		if (bot > top) return l1;
 		//if (l1 >= len1start) {
 			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		//}
@@ -182,7 +182,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			else break;
 		}
 		*/
-		if (bot >= top) return l1;
+		if (bot > top) return l1;
 		//if (l1 >= len1start) {
 		//	subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		//}
@@ -211,7 +211,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			else break;
 		}
 		*/
-		if (bot >= top) return l1;
+		if (bot > top) return l1;
 		//if (l1 >= len1start) {
 			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		//}
