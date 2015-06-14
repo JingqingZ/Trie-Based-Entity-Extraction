@@ -336,12 +336,12 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					backbot = max(0, enheadlen - 1);
 					backupp = min(subdocmax2, enheadlen + 1);
 					// backwards
-					backStartPosSize = 0;
+					//backStartPosSize = 0;
 					returnupp = calcEDback(document + startpos - 1, backbot, backupp,
 						              entity[entityId].name.c_str() + entity[entityId].segpos[1] - 1, enheadlen);
 					for (dl = backbot ; dl < returnupp ; ++dl) {
 						if (subDocED[dl] == 1)
-							backStartPos[backStartPosSize++] = startpos - dl;
+							backStartPos[dl - backbot] = startpos - dl;
 					}
 					// forwards
 					forwTailPosSize = 0;
@@ -352,7 +352,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 							forwTailPos[forwTailPosSize++] = currentPos + dl;
 					}
 					// combine
-					for (int rbi = 0; rbi < backStartPosSize; ++rbi) {
+					for (int rbi = 0; rbi < (returnupp - backbot); ++rbi) {
 						for (int rfi = 0; rfi < forwTailPosSize; ++rfi)
 							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(backStartPos[rbi]),
 									                                  (unsigned)(forwTailPos[rfi] - backStartPos[rbi]), (unsigned)(2)});
