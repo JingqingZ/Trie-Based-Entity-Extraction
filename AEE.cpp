@@ -114,7 +114,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			else break;
 		}
 		if (bot >= top) break;
-		if (l1 >= len1start && l1 <= len1end) {
+		if (l1 >= len1start) {
 			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 	}
@@ -153,7 +153,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			else break;
 		}
 		if (bot >= top) break;
-		if (l1 >= len1start && l1 <= len1end) {
+		if (l1 >= len1start) {
 			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 	}
