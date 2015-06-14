@@ -323,7 +323,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 								           entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen);
 					for (dl = forwbot; dl < returnupp; ++dl) {
 						if (subDocED[dl] <= THRESHOLD) {
-							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
+							resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos), (unsigned)(dl + subduration), (unsigned)(subDocED[dl])});
 						}
 					}
 				}
@@ -367,7 +367,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 								  entity[entityId].name.c_str() + entity[entityId].segpos[2] - 1, enheadlen);
 					for (dl = backbot; dl < returnupp; ++dl) {
 						if (subDocED[dl] <= THRESHOLD && subDocED[dl] > 0) { // dist == 0 can be found in candidateleft
-					     	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + (currentPos - startpos)), (unsigned)(subDocED[dl])});
+					     	resultCandidate.push_back(EDExtractResult{(unsigned)entityId, (unsigned)(startpos - dl), (unsigned)(dl + subduration), (unsigned)(subDocED[dl])});
 						}
 					}
 				}
