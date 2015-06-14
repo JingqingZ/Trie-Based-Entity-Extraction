@@ -58,7 +58,7 @@ TrieNode::~TrieNode() {
 
 
 AEE::AEE() {
-	segmentNum = thresholdp1;
+	segmentNum = THRESHOLD + 1;
 	entityMinLen = MAXENTITYLEN;
 	entityMaxLen = 0;
 	segMinLen = MAXENTITYLEN;
@@ -85,14 +85,14 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	// initialize
 	bot = 1;
 	top = topref;
-	//editdist[0] = thresholdp1;
-	//editdist[topref] = thresholdp1;
+	//editdist[0] = THRESHOLD + 1;
+	//editdist[topref] = THRESHOLD + 1;
 	int i;
-	for (i = 0; i < thresholdp1; ++i) {
-		editdist[i] = thresholdp1 - i;
+	for (i = 0; i < THRESHOLD + 1; ++i) {
+		editdist[i] = THRESHOLD + 1 - i;
 	}
-	for (i = thresholdp1; i <= top; ++i) {
-		editdist[i] = i - thresholdp1;
+	for (i = THRESHOLD + 1; i <= top; ++i) {
+		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
 	subDocED[len1start] = len2;
@@ -114,7 +114,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 		}
 		if (bot >= top) break;
 		if (l1 >= len1start && l1 <= len1end) {
-			subDocED[l1] = editdist[thresholdp1 + len2 - l1];
+			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 	}
 	return l1;
@@ -124,14 +124,14 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	//calculate ED backwards
 	bot = 1;
 	top = topref;
-	//editdist[0] = thresholdp1;
-	//editdist[topref] = thresholdp1;
+	//editdist[0] = THRESHOLD + 1;
+	//editdist[topref] = THRESHOLD + 1;
 	int i;
-	for (i = 0; i < thresholdp1; ++i) {
-		editdist[i] = thresholdp1 - i;
+	for (i = 0; i < THRESHOLD + 1; ++i) {
+		editdist[i] = THRESHOLD + 1 - i;
 	}
-	for (i = thresholdp1; i <= top; ++i) {
-		editdist[i] = i - thresholdp1;
+	for (i = THRESHOLD + 1; i <= top; ++i) {
+		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
 	subDocED[len1start] = len2;
@@ -153,7 +153,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 		}
 		if (bot >= top) break;
 		if (l1 >= len1start && l1 <= len1end) {
-			subDocED[l1] = editdist[thresholdp1 + len2 - l1];
+			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
 	}
 	return l1;
