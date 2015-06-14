@@ -377,15 +377,15 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 	
 	// sort and unique    
     sort(resultCandidate.begin(), resultCandidate.end(), compareEDResult);
-    if (resultCandidate.size() > 0) {
-    	result.push_back(resultCandidate[0]);
-    	for (int i = 1; i < resultCandidate.size(); ++i) {
+    //if (resultCandidate.size() > 0) {
+    	//result.push_back(resultCandidate[0]);
+    	for (int i = 0; i < resultCandidate.size(); ++i) {
     		if (result.back() != resultCandidate[i])
     			result.push_back(resultCandidate[i]);
     	}
-    } else {
-    	return SUCCESS;
-    }
+   // } else {
+    //	return SUCCESS;
+    //}
     
     return SUCCESS;
 }
