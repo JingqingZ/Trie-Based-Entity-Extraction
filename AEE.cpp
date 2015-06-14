@@ -143,11 +143,11 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 		}
 		for (i = bot; i < top; ++i) {
-			if (editdist[bot] > THRESHOLD) bot++;
+			if (editdist[i] > THRESHOLD) bot++;
 			else break;
 		}
 		for (i = top-1; i >= bot; --i) {
-			if (editdist[top - 1] > THRESHOLD) top--;
+			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
 		if (bot >= top) break;
