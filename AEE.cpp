@@ -317,8 +317,8 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     			for (pi = 0 ; pi < parent->entityCandidateLeft.size() ; pi++) {
 					entityId = parent->entityCandidateLeft[pi];
 					entaillen = entity[entityId].segpos[3] - entity[entityId].segpos[1];
-					forwbot = (subdocmin > entaillen - THRESHOLD) ? subdocmin : (entaillen - THRESHOLD);
-					forwupp = (subdocmax > entaillen + THRESHOLD) ? (entaillen + THRESHOLD): subdocmax;
+					forwbot = max(subdocmin, entaillen - THRESHOLD);
+					forwupp = min(subdocmax, entaillen + THRESHOLD);
 					returnupp = calcEDforw(document + currentPos, forwbot, forwupp,
 								           entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen);
 					for (dl = forwbot; dl < returnupp; ++dl) {
@@ -331,10 +331,10 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					entityId = parent->entityCandidateMiddle[pi];
 					enheadlen = entity[entityId].segpos[1];
 					entaillen = entity[entityId].segpos[3] - entity[entityId].segpos[2];
-					forwbot = entaillen - 1;
-					forwupp = (subdocmax > entaillen + 1) ? (entaillen + 1) : subdocmax;
-					backbot = enheadlen - 1;
-					backupp = (subdocmax2 > enheadlen + 1) ? (enheadlen + 1) : subdocmax2;
+					forwbot = max(0, entaillen - 1);
+					forwupp = min(subdocmax, entaillen + 1);
+					backbot = max(0, enheadlen - 1);
+					backupp = min(subdocmax2, enheadlen + 1);
 					// backwards
 					backStartPosSize = 0;
 					returnupp = calcEDback(document + startpos - 1, backbot, backupp,
