@@ -39,6 +39,7 @@ int subdocmax;
 int subdocmax2;
 int subduration;
 int pi, dl;
+const int topref = topref;
 
 TrieNode::TrieNode(int charUniNum) {
 	children = new TrieNode* [charUniNum];
@@ -82,9 +83,9 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	// calculate ED forwards
 	// initialize
 	bot = 1;
-	top = 2 * THRESHOLD + 2;
+	top = topref;
 	//editdist[0] = THRESHOLD + 1;
-	//editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
+	//editdist[topref] = THRESHOLD + 1;
 	int i;
 	for (i = 0; i < THRESHOLD + 1; ++i) {
 		editdist[i] = THRESHOLD + 1 - i;
@@ -122,9 +123,9 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char* doc2end, int len2) {
 	//calculate ED backwards
 	bot = 1;
-	top = 2 * THRESHOLD + 2;
+	top = topref;
 	//editdist[0] = THRESHOLD + 1;
-	//editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
+	//editdist[topref] = THRESHOLD + 1;
 	int i;
 	for (i = 0; i < THRESHOLD + 1; ++i) {
 		editdist[i] = THRESHOLD + 1 - i;
