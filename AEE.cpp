@@ -39,8 +39,8 @@ int subdocmax;
 int subdocmax2;
 int subduration;
 int pi, dl;
-const int thresholdp1 = THRESHOLD + 1;
-const int topref = 2 * thresholdp1;
+//const int thresholdp1 = THRESHOLD + 1;
+const int topref = 2 * THRESHOLD + 2;
 
 TrieNode::TrieNode(int charUniNum) {
 	children = new TrieNode* [charUniNum];
