@@ -67,8 +67,8 @@ AEE::AEE() {
 	for (int i = 0 ; i < ASCIISIZE ; i++)
 		charUniMap[i] = -1;
 	charUniNum = 0;
-	backStartPos = new int[MAXENTITY];
-	forwTailPos = new int[MAXENTITY];
+	backStartPos = new int[MAXENTITYLEN];
+	forwTailPos = new int[MAXENTITYLEN];
 }
 
 AEE::~AEE() {
