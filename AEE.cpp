@@ -186,13 +186,15 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			vn = editdist[i] + (doc1end[1 - l1] != doc2end[-l2]);
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 		}
+		/*
 		while (editdist[bot] > THRESHOLD) {
 			bot ++;
 		}
 		while (editdist[top] > THRESHOLD) {
 			top --;
 		}
-		/*
+		*/
+		
 		for (i = bot; i <= top; ++i) {
 			if (editdist[i] > THRESHOLD) bot++;
 			else break;
@@ -201,7 +203,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
-		*/
+		
 		if (bot > top) return l1;
 		//if (l1 >= len1start) {
 		//	subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
@@ -215,13 +217,15 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			vn = editdist[i] + (doc1end[1 - l1] != doc2end[-l2]);
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 		}
+		/*
 		while (editdist[bot] > THRESHOLD) {
 			bot ++;
 		}
 		while (editdist[top] > THRESHOLD) {
 			top --;
 		}
-		/*
+		*/
+		
 		for (i = bot; i <= top; ++i) {
 			if (editdist[i] > THRESHOLD) bot++;
 			else break;
@@ -230,7 +234,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
-		*/
+		
 		if (bot > top) return l1;
 		//if (l1 >= len1start) {
 		subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
