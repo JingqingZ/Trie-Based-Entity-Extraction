@@ -304,7 +304,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     	parent = root;
     	currentPos = startpos;
     	while (currentPos < doclen) {
-    		currentChar = charUniMap[(int)document[currentPos]];
+    		currentChar = charUniMap[document[currentPos]];
     		parent = parent->children[currentChar];
     		currentPos ++;
     		if (parent == NULL)
