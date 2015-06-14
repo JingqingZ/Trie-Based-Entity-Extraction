@@ -123,13 +123,13 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	//calculate ED backwards
 	bot = 1;
 	top = 2 * THRESHOLD + 2;
-	editdist[0] = THRESHOLD + 1;
-	editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
+	//editdist[0] = THRESHOLD + 1;
+	//editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
 	int i;
-	for (i = 1; i < THRESHOLD + 1; ++i) {
+	for (i = 0; i < THRESHOLD + 1; ++i) {
 		editdist[i] = THRESHOLD + 1 - i;
 	}
-	for (i = THRESHOLD + 1; i < 2 * THRESHOLD + 2; ++i) {
+	for (i = THRESHOLD + 1; i <= top; ++i) {
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
