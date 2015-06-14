@@ -303,7 +303,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     for (int startpos = 0 ; startpos < endpos; startpos++) {
     	parent = root;
     	currentPos = startpos;
-    	while (currentPos < doclen) {
+    	do {
     		currentChar = charUniMap[(int)document[currentPos]];
     		parent = parent->children[currentChar];
     		currentPos ++;
@@ -372,7 +372,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					}
 				}
     		}
-    	}
+    	} while (currentPos < doclen)
     }
 	
 	// sort and unique    
