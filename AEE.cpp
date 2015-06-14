@@ -332,9 +332,9 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					enheadlen = entity[entityId].segpos[1];
 					entaillen = entity[entityId].segpos[3] - entity[entityId].segpos[2];
 					forwbot = entaillen - 1;
-					forwupp = min(subdocmax, entaillen + 1);
+					forwupp = (subdocmax > entaillen + 1) ? (entaillen + 1) : subdocmax;
 					backbot = enheadlen - 1;
-					backupp = min(subdocmax2, enheadlen + 1);
+					backupp = (subdocmax2 > enheadlen + 1) ? (enheadlen + 1) : subdocmax2;
 					// backwards
 					backStartPosSize = 0;
 					returnupp = calcEDback(document + startpos - 1, backbot, backupp,
