@@ -97,7 +97,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	//update edit distance
 	subDocED[len1start] = len2;
 	for (l1 = 1; l1 <= len1end; ++l1) {
-		for (i = max(bot, THRESHOLD - l1 + 2); i < top; ++i) {
+		for (i = max(bot, THRESHOLD - l1 + 2); i < min(top, len2 - l1 + 2 + THRESHOLD); ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
 			l2 = i - THRESHOLD + l1 - 2;
@@ -137,7 +137,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	//update edit distance
 	subDocED[len1start] = len2;
 	for (l1 = 1; l1 <= len1end; ++l1) {
-		for (i = max(bot, THRESHOLD - l1 + 2); i < min(top, len2 - l1 + 1 + THRESHOLD + 1); ++i) {
+		for (i = max(bot, THRESHOLD - l1 + 2); i < min(top, len2 - l1 + 2 + THRESHOLD); ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
 			l2 = i - THRESHOLD + l1 - 2;
