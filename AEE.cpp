@@ -39,7 +39,8 @@ int subdocmax;
 int subdocmax2;
 int subduration;
 int pi, dl;
-const int topref = 2 * THRESHOLD + 2;
+const int thresholdp1 = THRESHOLD + 1;
+const int topref = 2 * thresholdp1;
 
 TrieNode::TrieNode(int charUniNum) {
 	children = new TrieNode* [charUniNum];
@@ -57,7 +58,7 @@ TrieNode::~TrieNode() {
 
 
 AEE::AEE() {
-	segmentNum = THRESHOLD + 1;
+	segmentNum = thresholdp1;
 	entityMinLen = MAXENTITYLEN;
 	entityMaxLen = 0;
 	segMinLen = MAXENTITYLEN;
@@ -84,13 +85,13 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	// initialize
 	bot = 1;
 	top = topref;
-	//editdist[0] = THRESHOLD + 1;
-	//editdist[topref] = THRESHOLD + 1;
+	//editdist[0] = thresholdp1;
+	//editdist[topref] = thresholdp1;
 	int i;
-	for (i = 0; i < THRESHOLD + 1; ++i) {
-		editdist[i] = THRESHOLD + 1 - i;
+	for (i = 0; i < thresholdp1; ++i) {
+		editdist[i] = thresholdp1 - i;
 	}
-	for (i = THRESHOLD + 1; i <= top; ++i) {
+	for (i = thresholdp1; i <= top; ++i) {
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
@@ -113,7 +114,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 		}
 		if (bot >= top) break;
 		if (l1 >= len1start && l1 <= len1end) {
-			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
+			subDocED[l1] = editdist[thresholdp1 + len2 - l1];
 		}
 	}
 	return l1;
@@ -123,13 +124,13 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	//calculate ED backwards
 	bot = 1;
 	top = topref;
-	//editdist[0] = THRESHOLD + 1;
-	//editdist[topref] = THRESHOLD + 1;
+	//editdist[0] = thresholdp1;
+	//editdist[topref] = thresholdp1;
 	int i;
-	for (i = 0; i < THRESHOLD + 1; ++i) {
-		editdist[i] = THRESHOLD + 1 - i;
+	for (i = 0; i < thresholdp1; ++i) {
+		editdist[i] = thresholdp1 - i;
 	}
-	for (i = THRESHOLD + 1; i <= top; ++i) {
+	for (i = thresholdp1; i <= top; ++i) {
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
@@ -152,7 +153,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 		}
 		if (bot >= top) break;
 		if (l1 >= len1start && l1 <= len1end) {
-			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
+			subDocED[l1] = editdist[thresholdp1 + len2 - l1];
 		}
 	}
 	return l1;
