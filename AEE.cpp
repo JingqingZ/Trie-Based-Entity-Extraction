@@ -86,6 +86,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	bot = 1;
 	top = topref;
 	int i;
+	editdist[0] = THRESHOLD + 1;
 	for (i = 0; i < THRESHOLD + 1; ++i) {
 		//editdist[i] = THRESHOLD + 1 - i;
 	}
