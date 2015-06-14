@@ -218,7 +218,7 @@ int AEE::createIndex(const char *entity_file_name) {
 		if (charUniMap[i] < 0)
 			charUniMap[i] = charUniNum;
 	}
-	charUniNum = 256;
+	charUniNum ++;
 
 	// build trie tree
 	root = new TrieNode(charUniNum);
