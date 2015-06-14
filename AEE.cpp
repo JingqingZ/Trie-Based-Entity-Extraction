@@ -95,7 +95,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	//update edit distance
 	for (l1 = 1; l1 < len1start; ++l1) {
 		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
-			vl = min(editdist[i-1], editdist[i+1]) +1;
+			vl = ((editdist[i-1] > editdist[i+1]) ? editdist[i+1] : editdist[i-1])+1;
 			//vt = editdist[i+1]+1;
 			vn = editdist[i] + (doc1[l1-1] != doc2[i - THRESHOLD + l1 - 2]);
 			//editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
@@ -115,7 +115,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	}
 	for (l1 = len1start; l1 <= len1end; ++l1) {
 		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
-			vl = min(editdist[i-1], editdist[i+1]) +1;
+			vl = ((editdist[i-1] > editdist[i+1]) ? editdist[i+1] : editdist[i-1])+1;
 			//vt = editdist[i+1]+1;
 			vn = editdist[i] + (doc1[l1-1] != doc2[i - THRESHOLD + l1 - 2]);
 			//editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
