@@ -372,7 +372,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					}
 				}
     		}
-    	} while (currentPos < doclen)
+    	} while (currentPos < doclen);
     }
 	
 	// sort and unique    
