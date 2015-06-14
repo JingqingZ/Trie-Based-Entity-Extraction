@@ -106,16 +106,14 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			//editdist[i] = min(vl, min(vt, vn));
 		}
 		for (i = bot; i < top; ++i) {
-			if (editdist[i] > THRESHOLD) {
-				bot ++;
-				if (bot >= top) break;
-			}
+			if (editdist[i] > THRESHOLD) bot++;
 			else break;
 		}
 		for (i = top-1; i >= bot; --i) {
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
+		if (bot >= top) break;
 		if (l1 >= len1start && l1 <= len1end) {
 			subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
 		}
