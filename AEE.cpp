@@ -194,7 +194,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	}
 	for (l1 = len1start; l1 <= len1end; ++l1) {
 		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
-						//vt = editdist[i+1]+1;
+			vl = ((editdist[i-1] > editdist[i+1]) ? editdist[i+1] : editdist[i-1]) + 1;
 			//l2 = i - THRESHOLD + l1 - 2;
 			vn = editdist[i] + (doc1end[1 - l1] != doc2end[-(i - THRESHOLD + l1 - 2)]);
 			editdist[i] = (vl > vn) ? vn : vl;
