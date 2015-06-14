@@ -85,8 +85,6 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	// initialize
 	bot = 1;
 	top = topref;
-	//editdist[0] = THRESHOLD + 1;
-	//editdist[topref] = THRESHOLD + 1;
 	int i;
 	for (i = 0; i < THRESHOLD + 1; ++i) {
 		editdist[i] = THRESHOLD + 1 - i;
@@ -95,24 +93,14 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
-	//subDocED[len1start] = len2;
 	for (l1 = 1; l1 < len1start; ++l1) {
 		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
-			vl = editdist[i-1]+1;
-			vt = editdist[i+1]+1;
-			//l2 = i - THRESHOLD + l1 - 2;
+			vl = min(editdist[i-1], editdist[i+1) +1;
+			//vt = editdist[i+1]+1;
 			vn = editdist[i] + (doc1[l1-1] != doc2[i - THRESHOLD + l1 - 2]);
-			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
-			//editdist[i] = min(vl, min(vt, vn));
+			//editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
+			editdist[i] = (vl > vn) ? vn : vl;
 		}
-		/*
-		while (editdist[bot] > THRESHOLD) {
-			bot ++;
-		}
-		while (editdist[top] > THRESHOLD) {
-			top --;
-		}
-		*/
 		
 		for (i = bot; i <= top; ++i) {
 			if (editdist[i] > THRESHOLD) bot++;
@@ -124,9 +112,6 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 		}
 		
 		if (bot > top) return l1;
-		//if (l1 >= len1start) {
-		//	subDocED[l1] = editdist[THRESHOLD + 1 + len2 - l1];
-		//}
 	}
 	for (l1 = len1start; l1 <= len1end; ++l1) {
 		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
