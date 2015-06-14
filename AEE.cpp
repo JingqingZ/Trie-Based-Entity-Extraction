@@ -336,14 +336,13 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
 					backbot = max(0, enheadlen - 1);
 					backupp = min(subdocmax2, enheadlen + 1);
 					// backwards
-					//backStartPosSize = 0;
+					backStartPosSize = 0;
 					returnupp = calcEDback(document + startpos - 1, backbot, backupp,
 						              entity[entityId].name.c_str() + entity[entityId].segpos[1] - 1, enheadlen);
 					for (dl = backbot ; dl < returnupp ; ++dl) {
 						if (subDocED[dl] == 1)
-							backStartPos[dl - backbot] = startpos - dl;
+							backStartPos[backStartPosSize++] = startpos - dl;
 					}
-					backStartPosSize = returnupp - backbot;
 					// forwards
 					forwTailPosSize = 0;
 					returnupp = calcEDforw(document + currentPos, forwbot, forwupp,
