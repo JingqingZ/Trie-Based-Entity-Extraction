@@ -39,11 +39,10 @@ int subdocmax;
 int subdocmax2;
 int subduration;
 int pi, dl;
-int i;
 
 TrieNode::TrieNode(int charUniNum) {
 	children = new TrieNode* [charUniNum];
-	for (i = 0 ; i < charUniNum ; i++)
+	for (int i = 0 ; i < charUniNum ; i++)
 		children[i] = NULL;
 	leaf = false;
 	entityCandidateLeft.clear();
@@ -63,7 +62,7 @@ AEE::AEE() {
 	segMinLen = MAXENTITYLEN;
 	entity = new Entity[MAXENTITY];
 	charUniMap = new int[ASCIISIZE];
-	for (i = 0 ; i < ASCIISIZE ; i++)
+	for (int i = 0 ; i < ASCIISIZE ; i++)
 		charUniMap[i] = -1;
 	charUniNum = 0;
 	backStartPos = new int[MAXENTITY];
@@ -86,6 +85,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	top = 2 * THRESHOLD + 2;
 	editdist[0] = THRESHOLD + 1;
 	editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
+	int i;
 	for (i = 1; i < THRESHOLD + 1; ++i) {
 		editdist[i] = THRESHOLD + 1 - i;
 	}
@@ -125,16 +125,16 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	top = 2 * THRESHOLD + 2;
 	editdist[0] = THRESHOLD + 1;
 	editdist[2 * THRESHOLD + 2] = THRESHOLD + 1;
-	for (i = 1; i < THRESHOLD + 1; ++i) {
+	for (int i = 1; i < THRESHOLD + 1; ++i) {
 		editdist[i] = THRESHOLD + 1 - i;
 	}
-	for (i = THRESHOLD + 1; i < 2 * THRESHOLD + 2; ++i) {
+	for (int i = THRESHOLD + 1; i < 2 * THRESHOLD + 2; ++i) {
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
 	subDocED[len1start] = len2;
 	for (l1 = 1; l1 <= len1end; ++l1) {
-		for (i = bot; i < top; ++i) {
+		for (int i = bot; i < top; ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
 			l2 = i - THRESHOLD + l1 - 2;
@@ -142,11 +142,11 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			     ((l2 >= 0 && l2 < len2) ? (*(doc1end - (l1 - 1)) != *(doc2end - l2)) : 1);
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 		}
-		for (i = bot; i < top; ++i) {
+		for (int i = bot; i < top; ++i) {
 			if (editdist[bot] > THRESHOLD) bot++;
 			else break;
 		}
-		for (i = top-1; i >= bot; --i) {
+		for (int i = top-1; i >= bot; --i) {
 			if (editdist[top - 1] > THRESHOLD) top--;
 			else break;
 		}
@@ -197,7 +197,7 @@ int AEE::createIndex(const char *entity_file_name) {
 		if (seglen < segMinLen)
 			segMinLen = seglen;
 		currentEntity.segpos[0] = 0;
-		for (i = 1 ; i < segmentNum ; i++) {
+		for (int i = 1 ; i < segmentNum ; i++) {
 			currentEntity.segpos[i] = currentEntity.segpos[i - 1] + seglen;
 			if (i == segmentNum - mode)
 				seglen ++;
@@ -215,7 +215,7 @@ int AEE::createIndex(const char *entity_file_name) {
 	
 	subDocED = new int[subDocMaxLen];
 
-	for (i = 0 ; i < ASCIISIZE ; i++) {
+	for (int i = 0 ; i < ASCIISIZE ; i++) {
 		if (charUniMap[i] < 0)
 			charUniMap[i] = charUniNum;
 	}
@@ -227,7 +227,7 @@ int AEE::createIndex(const char *entity_file_name) {
 		int mode = entity[ei].length % segmentNum;
 		int startpos = 0;
 		int enlen = entity[ei].length / segmentNum;
-		for (i = 0; i < segmentNum; ++i) {
+		for (int i = 0; i < segmentNum; ++i) {
 			if (i == segmentNum - mode)
 				enlen ++;
 			TrieNode* parent = root;
@@ -346,7 +346,7 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     sort(resultCandidate.begin(), resultCandidate.end(), compareEDResult);
     if (resultCandidate.size() > 0) {
     	result.push_back(resultCandidate[0]);
-    	for (i = 1; i < resultCandidate.size(); ++i) {
+    	for (int i = 1; i < resultCandidate.size(); ++i) {
     		if (result.back() != resultCandidate[i])
     			result.push_back(resultCandidate[i]);
     	}
