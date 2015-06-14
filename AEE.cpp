@@ -317,8 +317,8 @@ int AEE::aeeED(const char *document, unsigned threshold, vector<EDExtractResult>
     			for (pi = 0 ; pi < parent->entityCandidateLeft.size() ; pi++) {
 					entityId = parent->entityCandidateLeft[pi];
 					entaillen = entity[entityId].segpos[3] - entity[entityId].segpos[1];
-					forwbot = max(subdocmin, entaillen - THRESHOLD);
-					forwupp = min(subdocmax, entaillen + THRESHOLD);
+					forwbot = (subdocmin > entaillen - THRESHOLD) ? (entaillen - THRESHOLD) : subdocmin;
+					forwupp = (subdocmax > entaillen + THRESHOLD) ? (entaillen + THRESHOLD): subdocmax;
 					returnupp = calcEDforw(document + currentPos, forwbot, forwupp,
 								           entity[entityId].name.c_str() + entity[entityId].segpos[1], entaillen);
 					for (dl = forwbot; dl < returnupp; ++dl) {
