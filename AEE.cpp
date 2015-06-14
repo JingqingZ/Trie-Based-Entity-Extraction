@@ -40,7 +40,7 @@ int subdocmax2;
 int subduration;
 int pi, dl;
 //const int thresholdp1 = THRESHOLD + 1;
-const int topref = 2 * THRESHOLD + 2;
+const int topref = 2 * THRESHOLD + 1;
 
 TrieNode::TrieNode(int charUniNum) {
 	children = new TrieNode* [charUniNum];
@@ -91,13 +91,13 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 	for (i = 0; i < THRESHOLD + 1; ++i) {
 		editdist[i] = THRESHOLD + 1 - i;
 	}
-	for (i = THRESHOLD + 1; i <= top; ++i) {
+	for (i = THRESHOLD + 1; i <= top + 1; ++i) {
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
 	//subDocED[len1start] = len2;
 	for (l1 = 1; l1 < len1start; ++l1) {
-		for (i = max(bot, THRESHOLD - l1 + 2); i < top; ++i) {
+		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
 			l2 = i - THRESHOLD + l1 - 2;
@@ -105,11 +105,11 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 			//editdist[i] = min(vl, min(vt, vn));
 		}
-		for (i = bot; i < top; ++i) {
+		for (i = bot; i <= top; ++i) {
 			if (editdist[i] > THRESHOLD) bot++;
 			else break;
 		}
-		for (i = top-1; i >= bot; --i) {
+		for (i = top; i >= bot; --i) {
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
@@ -119,7 +119,7 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 		//}
 	}
 	for (l1 = len1start; l1 <= len1end; ++l1) {
-		for (i = max(bot, THRESHOLD - l1 + 2); i < top; ++i) {
+		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
 			l2 = i - THRESHOLD + l1 - 2;
@@ -127,11 +127,11 @@ int AEE::calcEDforw(const char* doc1, int len1start, int len1end, const char* do
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 			//editdist[i] = min(vl, min(vt, vn));
 		}
-		for (i = bot; i < top; ++i) {
+		for (i = bot; i <= top; ++i) {
 			if (editdist[i] > THRESHOLD) bot++;
 			else break;
 		}
-		for (i = top-1; i >= bot; --i) {
+		for (i = top; i >= bot; --i) {
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
@@ -153,13 +153,13 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 	for (i = 0; i < THRESHOLD + 1; ++i) {
 		editdist[i] = THRESHOLD + 1 - i;
 	}
-	for (i = THRESHOLD + 1; i <= top; ++i) {
+	for (i = THRESHOLD + 1; i <= top + 1; ++i) {
 		editdist[i] = i - THRESHOLD - 1;
 	}
 	//update edit distance
 	//subDocED[len1start] = len2;
 	for (l1 = 1; l1 < len1start; ++l1) {
-		for (i = max(bot, THRESHOLD - l1 + 2); i < top; ++i) {
+		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
 			l2 = i - THRESHOLD + l1 - 2;
@@ -167,17 +167,17 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 		}
 		while (editdist[bot] > THRESHOLD) {
-			bot++;
+			bot ++;
 		}
-		while (editdist[top-1] > THRESHOLD) {
+		while (editdist[top] > THRESHOLD) {
 			top --;
 		}
 		/*
-		for (i = bot; i < top; ++i) {
+		for (i = bot; i <= top; ++i) {
 			if (editdist[i] > THRESHOLD) bot++;
 			else break;
 		}
-		for (i = top-1; i >= bot; --i) {
+		for (i = top; i >= bot; --i) {
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
@@ -188,7 +188,7 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 		//}
 	}
 	for (l1 = len1start; l1 <= len1end; ++l1) {
-		for (i = max(bot, THRESHOLD - l1 + 2); i < top; ++i) {
+		for (i = max(bot, THRESHOLD - l1 + 2); i <= top; ++i) {
 			vl = editdist[i-1]+1;
 			vt = editdist[i+1]+1;
 			l2 = i - THRESHOLD + l1 - 2;
@@ -196,17 +196,17 @@ int AEE::calcEDback(const char* doc1end, int len1start, int len1end, const char*
 			editdist[i] = (vl > vt) ? ((vt > vn) ? vn : vt) : ((vl > vn) ? vn : vl);
 		}
 		while (editdist[bot] > THRESHOLD) {
-			bot++;
+			bot ++;
 		}
-		while (editdist[top-1] > THRESHOLD) {
+		while (editdist[top] > THRESHOLD) {
 			top --;
 		}
 		/*
-		for (i = bot; i < top; ++i) {
+		for (i = bot; i <= top; ++i) {
 			if (editdist[i] > THRESHOLD) bot++;
 			else break;
 		}
-		for (i = top-1; i >= bot; --i) {
+		for (i = top; i >= bot; --i) {
 			if (editdist[i] > THRESHOLD) top--;
 			else break;
 		}
